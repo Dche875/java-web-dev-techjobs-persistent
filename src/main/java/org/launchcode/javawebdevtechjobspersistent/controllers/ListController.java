@@ -1,7 +1,9 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
+import org.launchcode.javawebdevtechjobspersistent.models.data.EmployerRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.JobRepository;
+import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +22,16 @@ import java.util.HashMap;
 public class ListController {
 
     @Autowired
+    private EmployerRepository employerRepository;
+
+    @Autowired
+    private SkillRepository skillRepository;
+
+    @Autowired
     private JobRepository jobRepository;
 
     static HashMap<String, String> columnChoices = new HashMap<>();
+    static HashMap<String, Object> tableChoices = new HashMap<>();
 
     public ListController () {
 
@@ -34,6 +43,8 @@ public class ListController {
 
     @RequestMapping("")
     public String list(Model model) {
+        model.addAttribute("employers", employerRepository.findAll());
+        model.addAttribute("skills", skillRepository.findAll());
 
         return "list";
     }
@@ -44,9 +55,13 @@ public class ListController {
         if (column.toLowerCase().equals("all")){
             jobs = jobRepository.findAll();
             model.addAttribute("title", "All Jobs");
+            model.addAttribute("jobs", jobs);
+//            model.addAttribute("employers", employerRepository.findAll());
+//            model.addAttribute("skills", skillRepository.findAll());
         } else {
             jobs = JobData.findByColumnAndValue(column, value, jobRepository.findAll());
             model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
+            model.addAttribute("jobs", jobs);
         }
         model.addAttribute("jobs", jobs);
 
