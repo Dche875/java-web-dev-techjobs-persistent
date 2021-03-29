@@ -31,7 +31,6 @@ public class ListController {
     private JobRepository jobRepository;
 
     static HashMap<String, String> columnChoices = new HashMap<>();
-    static HashMap<String, Object> tableChoices = new HashMap<>();
 
     public ListController () {
 
